@@ -17,11 +17,10 @@ public class PropertiesApplicationContext implements ApplicationContext {
     public PropertiesApplicationContext() {
         JSONParser jsonParser = new JSONParser();
 
-        try
-        {
+        try {
             JSONObject obj = (JSONObject) jsonParser.parse(new FileReader("C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json"));
 
-            JSONArray arrayBean = (JSONArray)obj.get("beans");
+            JSONArray arrayBean = (JSONArray) obj.get("beans");
 
             for (Object bean : arrayBean) {
                 buildBean((JSONObject) bean);
@@ -32,28 +31,26 @@ public class PropertiesApplicationContext implements ApplicationContext {
         }
     }
 
-    private void buildBean(JSONObject bean)
-    {
+    private void buildBean(JSONObject bean) {
         String name = (String) bean.get("name");
         String type = (String) bean.get("type");
 
-        JSONArray argsJSON = (JSONArray)bean.get("constructorArgs");
+        JSONArray argsJSON = (JSONArray) bean.get("constructorArgs");
 
         StringBuilder args = new StringBuilder();
-        if(argsJSON != null)
-            for (Object o: argsJSON) {
+        if (argsJSON != null)
+            for (Object o : argsJSON) {
                 args.append(o);
-        }
+            }
 
-        buildBeanObject(name,type,args.toString());
+        buildBeanObject(name, type, args.toString());
     }
 
     private void buildBeanObject(String name, String type, String args) {
         if (args.isEmpty())
             try {
                 beanObjects.put(name, Class.forName(type).getDeclaredConstructor().newInstance());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         else {
@@ -63,8 +60,8 @@ public class PropertiesApplicationContext implements ApplicationContext {
                     if (beanObjects.get(e) != null) {
                         beanObjects.put(name, Class.forName(type).getDeclaredConstructor(Storage.class).newInstance(beanObjects.get(e)));
                         //beanObjects.put(name, Class.forName(type).getConstructor(beanObjects.get(e).getClass().getInterfaces()[?]).newInstance(beanObjects.get(e)));
-                    }}
-                catch (Exception ex){
+                    }
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             });
