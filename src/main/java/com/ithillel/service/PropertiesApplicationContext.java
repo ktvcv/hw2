@@ -20,7 +20,8 @@ public class PropertiesApplicationContext implements ApplicationContext {
         JSONParser jsonParser = new JSONParser();
 
         try {
-            JSONObject obj = (JSONObject) jsonParser.parse(new FileReader("C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json"));
+            String fileName = "C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json";
+            JSONObject obj = (JSONObject) jsonParser.parse(new FileReader(fileName));
 
             JSONArray arrayBean = (JSONArray) obj.get("beans");
 
