@@ -1,7 +1,13 @@
 package com.ithillel.service;
 
+import com.ithillel.interfaces.CustomBean;
+import com.ithillel.interfaces.Storage;
+import com.ithillel.interfaces.TextProcessor;
+
 import java.util.Objects;
 
+@CustomBean(name = "textProcessor",
+            args = "storage")
 public class InMemoryTextProcessor implements TextProcessor {
 
     private final Storage storage;
