@@ -1,5 +1,8 @@
 package com.ithillel.service;
 
+import com.ithillel.Interfaces.Storage;
+import com.ithillel.Interfaces.TextProcessor;
+
 import java.util.Objects;
 
 public class InMemoryTextProcessor implements TextProcessor {

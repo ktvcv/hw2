@@ -1,11 +1,8 @@
 package com.ithillel;
 
-import com.ithillel.service.ApplicationContext;
-import com.ithillel.service.InMemoryTextProcessor;
+import com.ithillel.Interfaces.ApplicationContext;
 import com.ithillel.service.PropertiesApplicationContext;
-import com.ithillel.service.TextProcessor;
-
-import java.util.Objects;
+import com.ithillel.Interfaces.TextProcessor;
 
 public class Application {
 

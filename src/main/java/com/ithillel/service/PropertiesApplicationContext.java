@@ -1,15 +1,15 @@
 package com.ithillel.service;
 
+import com.ithillel.Interfaces.ApplicationContext;
+import com.ithillel.Interfaces.Storage;
+
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class PropertiesApplicationContext implements ApplicationContext {
 
-    private static final String TEXT_PROCESSOR = "textProcessor";
-    private Map<String, Object> beans = new HashMap<>();
-
+    private Map<String, Object> beanObjects = new HashMap<>();
     public PropertiesApplicationContext() {
         Properties applicationProperties = new Properties();
         try {
@@ -17,21 +17,43 @@ public class PropertiesApplicationContext implements ApplicationContext {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String value = applicationProperties.getProperty(TEXT_PROCESSOR);
-        try {
-            beans.put(TEXT_PROCESSOR, Class.forName(value).getDeclaredConstructor(Storage.class).newInstance(new HashMapStorage()));
-        } catch (Exception e) {
-            e.printStackTrace();
+        for(int i = 0; i < 2; i++){
+            buildBean(applicationProperties.getProperty("bean[" + i + "].name"),
+                      applicationProperties.getProperty("bean[" + i + "].type"),
+                      applicationProperties.getProperty("bean[" + i + "].args"));
         }
     }
 
+    private void buildBean(String name, String type, String args) {
+            if (args == null)
+                try {
+                    beanObjects.put(name, Class.forName(type).getDeclaredConstructor().newInstance());
+                }
+                    catch (Exception e){
+        e.printStackTrace();
+    }
+            else {
+                List<String> argsList = Arrays.asList(args.split(","));
+                argsList.forEach(e -> {
+                            try {
+                                if (beanObjects.get(e) != null) {
+                                    beanObjects.put(name, Class.forName(type).getDeclaredConstructor(Storage.class).newInstance(beanObjects.get(e)));
+                                    //beanObjects.put(name, Class.forName(type).getConstructor(beanObjects.get(e).getClass().getInterfaces()[0]).newInstance(beanObjects.get(e)));
+                                 }}
+                            catch (Exception ex){
+                                ex.printStackTrace();
+                            }
+                        });
+
+                }
+    }
     @Override
     public Object getBean(String name) {
-        return beans.get(name);
+        return beanObjects.get(name);
     }
 
     public static void main(String[] args) {
         PropertiesApplicationContext p = new PropertiesApplicationContext();
-
+        System.out.println("Beans " + p.beanObjects);
     }
 }

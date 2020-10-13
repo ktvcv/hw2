@@ -1,4 +1,4 @@
-package com.ithillel.service;
+package com.ithillel.Interfaces;
 
 import java.util.function.BiFunction;
 
