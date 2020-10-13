@@ -4,7 +4,6 @@ import com.ithillel.Interfaces.ApplicationContext;
 import com.ithillel.Interfaces.Storage;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class PropertiesApplicationContext implements ApplicationContext {
