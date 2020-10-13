@@ -15,13 +15,13 @@ import java.util.Map;
 public class PropertiesApplicationContext implements ApplicationContext {
 
     private Map<String, Object> beanObjects = new HashMap<>();
+    private final String FILE_NAME = "C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json";
 
     public PropertiesApplicationContext() {
         JSONParser jsonParser = new JSONParser();
 
         try {
-            String fileName = "C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json";
-            JSONObject obj = (JSONObject) jsonParser.parse(new FileReader(fileName));
+            JSONObject obj = (JSONObject) jsonParser.parse(new FileReader(FILE_NAME));
 
             JSONArray arrayBean = (JSONArray) obj.get("beans");
 
