@@ -1,5 +1,6 @@
 package com.ithillel.service;
 
+import com.ithillel.service.exceptions.LoadDataRuntimeException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,13 +15,23 @@ import java.util.Map;
 
 public class PropertiesApplicationContext implements ApplicationContext {
 
-    private Map<String, Object> beanObjects = new HashMap<>();
-    private final String FILE_NAME = "C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json";
+    private Map<String, Object> beanObjects;
 
     public PropertiesApplicationContext() {
+        beanObjects = new HashMap<>();
+        this.initBeansConfig();
+    }
+
+    public Map<String, Object> getBeanObjects() {
+        return beanObjects;
+    }
+
+    public void initBeansConfig() {
+
         JSONParser jsonParser = new JSONParser();
 
         try {
+            String FILE_NAME = System.getProperty("pathToTheFile");
             JSONObject obj = (JSONObject) jsonParser.parse(new FileReader(FILE_NAME));
 
             JSONArray arrayBean = (JSONArray) obj.get("beans");
@@ -30,13 +41,21 @@ public class PropertiesApplicationContext implements ApplicationContext {
             }
 
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            throw new LoadDataRuntimeException("Impossible to load data from beans properties file");
         }
+    }
+
+    @Override
+    public String getBeans() {
+        return beanObjects.toString();
     }
 
     private void buildBean(JSONObject bean) {
         String name = (String) bean.get("name");
         String type = (String) bean.get("type");
+
+        assert name != null;
+        assert type != null;
 
         JSONArray argsJSON = (JSONArray) bean.get("constructorArgs");
 
@@ -54,7 +73,8 @@ public class PropertiesApplicationContext implements ApplicationContext {
             try {
                 beanObjects.put(name, Class.forName(type).getDeclaredConstructor().newInstance());
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new LoadDataRuntimeException("Impossible to specify data from beans properties file: bean's name " + name);
+
             }
         else {
             List<String> argsList = Arrays.asList(args.split(","));
@@ -62,15 +82,14 @@ public class PropertiesApplicationContext implements ApplicationContext {
                 try {
                     if (beanObjects.get(e) != null) {
                         beanObjects.put(name, Class.forName(type).getDeclaredConstructor(Storage.class).newInstance(beanObjects.get(e)));
-                        //beanObjects.put(name, Class.forName(type).getConstructor(beanObjects.get(e).getClass().getInterfaces()[?]).newInstance(beanObjects.get(e)));
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    throw new LoadDataRuntimeException("Impossible to specify data from beans properties file");
+
                 }
             });
 
         }
-
     }
 
 
@@ -79,8 +98,5 @@ public class PropertiesApplicationContext implements ApplicationContext {
         return beanObjects.get(name);
     }
 
-    public static void main(String[] args) {
-        PropertiesApplicationContext p = new PropertiesApplicationContext();
-        System.out.println(p.beanObjects);
-    }
+
 }

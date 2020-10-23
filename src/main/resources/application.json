@@ -8,5 +8,6 @@
       "name": "textProcessor",
       "type": "com.ithillel.service.InMemoryTextProcessor",
       "constructorArgs": ["storage"]
+
     }]
 }
