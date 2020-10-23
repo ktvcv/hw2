@@ -21,6 +21,11 @@
             <artifactId>classgraph</artifactId>
             <version>4.8.37</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-api</artifactId>
+            <version>3.0.0-M5</version>
+        </dependency>
 
     </dependencies>
 

@@ -1,10 +1,12 @@
 package com.ithillel.service;
 
+import com.ithillel.exception.AnnotationRuntimeException;
 import com.ithillel.interfaces.ApplicationContext;
 import com.ithillel.interfaces.CustomBean;
 import com.ithillel.interfaces.Storage;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +14,11 @@ import java.util.Map;
 
 public class AnnotationApplicationContext implements ApplicationContext {
 
-    private Map<String, Object> beans = new HashMap<>();
+    private final Map<String, Object> beans;
 
     public AnnotationApplicationContext() {
 
+        this.beans = new HashMap<>();
         try (ScanResult scanResult = new ClassGraph()
                 .whitelistPackages("com.ithillel.service")
                 .enableClassInfo()
@@ -34,7 +37,7 @@ public class AnnotationApplicationContext implements ApplicationContext {
                                 beans.put(cB.name(), Class.forName(aClass).getDeclaredConstructor(Storage.class).newInstance(beans.get(cB.args())));
 
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            throw new AnnotationRuntimeException("Class cannot be found " + e);
                         }
                     });
         }
