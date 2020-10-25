@@ -1,4 +1,4 @@
-package com.ithillel.Interfaces;
+package com.ithillel.interfaces;
 
 public interface ApplicationContext {
     Object getBean(String name);

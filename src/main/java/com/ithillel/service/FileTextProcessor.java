@@ -1,6 +1,6 @@
 package com.ithillel.service;
 
-import com.ithillel.Interfaces.TextProcessor;
+import com.ithillel.interfaces.TextProcessor;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

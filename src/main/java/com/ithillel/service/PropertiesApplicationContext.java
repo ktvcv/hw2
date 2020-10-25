@@ -1,7 +1,8 @@
 package com.ithillel.service;
 
-import com.ithillel.Interfaces.ApplicationContext;
-import com.ithillel.Interfaces.Storage;
+import com.ithillel.exceptions.PropertiesLoadException;
+import com.ithillel.interfaces.ApplicationContext;
+import com.ithillel.interfaces.Storage;
 
 import java.io.IOException;
 import java.util.*;
@@ -10,13 +11,10 @@ public class PropertiesApplicationContext implements ApplicationContext {
 
     private Map<String, Object> beanObjects = new HashMap<>();
 
-    public PropertiesApplicationContext() {
+    public PropertiesApplicationContext() throws IOException {
         Properties applicationProperties = new Properties();
-        try {
             applicationProperties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         for (int i = 0; i < 2; i++) {
             buildBean(applicationProperties.getProperty("bean[" + i + "].name"),
                     applicationProperties.getProperty("bean[" + i + "].type"),
@@ -29,7 +27,7 @@ public class PropertiesApplicationContext implements ApplicationContext {
             try {
                 beanObjects.put(name, Class.forName(type).getDeclaredConstructor().newInstance());
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new PropertiesLoadException("Impossible to define class from properties file");
             }
 
         else {
@@ -38,10 +36,9 @@ public class PropertiesApplicationContext implements ApplicationContext {
                 try {
                     if (beanObjects.get(e) != null) {
                         beanObjects.put(name, Class.forName(type).getDeclaredConstructor(Storage.class).newInstance(beanObjects.get(e)));
-                        //beanObjects.put(name, Class.forName(type).getConstructor(beanObjects.get(e).getClass().getInterfaces()[0]).newInstance(beanObjects.get(e)));
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    throw new PropertiesLoadException("Impossible to define class from properties file");
                 }
             });
 
@@ -53,7 +50,7 @@ public class PropertiesApplicationContext implements ApplicationContext {
         return beanObjects.get(name);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         PropertiesApplicationContext p = new PropertiesApplicationContext();
         System.out.println("Beans " + p.beanObjects);
     }

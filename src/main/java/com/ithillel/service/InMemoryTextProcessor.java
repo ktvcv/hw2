@@ -1,7 +1,7 @@
 package com.ithillel.service;
 
-import com.ithillel.Interfaces.Storage;
-import com.ithillel.Interfaces.TextProcessor;
+import com.ithillel.interfaces.Storage;
+import com.ithillel.interfaces.TextProcessor;
 
 import java.util.Objects;
 

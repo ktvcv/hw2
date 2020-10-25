@@ -1,6 +1,6 @@
 package com.ithillel.service;
 
-import com.ithillel.Interfaces.Storage;
+import com.ithillel.interfaces.Storage;
 
 import java.util.HashMap;
 import java.util.Map;
