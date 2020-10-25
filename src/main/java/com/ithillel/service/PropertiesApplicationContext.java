@@ -1,5 +1,6 @@
 package com.ithillel.service;
 
+import com.ithillel.exception.LoadDataRuntimeException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,13 +15,18 @@ import java.util.Map;
 
 public class PropertiesApplicationContext implements ApplicationContext {
 
-    private Map<String, Object> beanObjects = new HashMap<>();
-    private final String FILE_NAME = "C:\\Users\\Victoria\\IdeaProjects\\TextProcessorHW2.2\\src\\main\\resources\\application.json";
+    private final Map<String, Object> beanObjects;
 
     public PropertiesApplicationContext() {
+        beanObjects = new HashMap<>();
+        initBeans();
+    }
+
+    private void initBeans(){
         JSONParser jsonParser = new JSONParser();
 
         try {
+            String FILE_NAME = System.getProperty("pathToTheFile");
             JSONObject obj = (JSONObject) jsonParser.parse(new FileReader(FILE_NAME));
 
             JSONArray arrayBean = (JSONArray) obj.get("beans");
@@ -30,7 +36,7 @@ public class PropertiesApplicationContext implements ApplicationContext {
             }
 
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            throw new LoadDataRuntimeException("Impossible to load data from beans json file");
         }
     }
 
@@ -38,6 +44,9 @@ public class PropertiesApplicationContext implements ApplicationContext {
         String name = (String) bean.get("name");
         String type = (String) bean.get("type");
 
+        if(name == null || type == null){
+            throw new LoadDataRuntimeException("One ore more non-optional arguments is null");
+        }
         JSONArray argsJSON = (JSONArray) bean.get("constructorArgs");
 
         StringBuilder args = new StringBuilder();
@@ -54,7 +63,7 @@ public class PropertiesApplicationContext implements ApplicationContext {
             try {
                 beanObjects.put(name, Class.forName(type).getDeclaredConstructor().newInstance());
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new LoadDataRuntimeException("Impossible to define a class from bean " + name);
             }
         else {
             List<String> argsList = Arrays.asList(args.split(","));
@@ -62,10 +71,9 @@ public class PropertiesApplicationContext implements ApplicationContext {
                 try {
                     if (beanObjects.get(e) != null) {
                         beanObjects.put(name, Class.forName(type).getDeclaredConstructor(Storage.class).newInstance(beanObjects.get(e)));
-                        //beanObjects.put(name, Class.forName(type).getConstructor(beanObjects.get(e).getClass().getInterfaces()[?]).newInstance(beanObjects.get(e)));
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    throw new LoadDataRuntimeException("Impossible to define a class from bean " + name);
                 }
             });
 
