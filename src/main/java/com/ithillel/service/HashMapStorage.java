@@ -1,5 +1,7 @@
 package com.ithillel.service;
 
+import com.ithillel.interfaces.Storage;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;

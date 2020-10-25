@@ -1,11 +1,10 @@
 package com.ithillel;
 
-import com.ithillel.service.ApplicationContext;
-import com.ithillel.service.InMemoryTextProcessor;
+import com.ithillel.interfaces.ApplicationContext;
 import com.ithillel.service.PropertiesApplicationContext;
-import com.ithillel.service.TextProcessor;
+import com.ithillel.interfaces.TextProcessor;
 
-import java.util.Objects;
+import java.io.IOException;
 
 public class Application {
 
@@ -13,7 +12,7 @@ public class Application {
     private ApplicationContext applicationContext = new PropertiesApplicationContext();
     private TextProcessor textProcessor;
 
-    public Application() {
+    public Application() throws IOException {
         textProcessor = (TextProcessor) applicationContext.getBean("textProcessor");
     }
 
@@ -25,7 +24,7 @@ public class Application {
        return textProcessor.getByKey(key);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Application application = new Application();
         application.save("1.txt", "simple text");
         System.out.println(application.getByKey("1.txt"));
