@@ -1,7 +1,9 @@
 package com.ithillel.service;
 
+import java.io.IOException;
+
 public interface ApplicationContext {
     Object getBean(String name);
-    void initBeansConfig();
+    void initBeansConfig() throws IOException;
     String getBeans();
 }
