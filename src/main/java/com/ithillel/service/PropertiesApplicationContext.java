@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class PropertiesApplicationContext implements ApplicationContext {
 
-    private Map<String, Object> beanObjects;
+    private final Map<String, Object> beanObjects;
 
     public PropertiesApplicationContext() throws IOException {
         this.beanObjects = new HashMap<>();

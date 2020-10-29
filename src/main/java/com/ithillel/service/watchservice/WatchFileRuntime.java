@@ -9,7 +9,6 @@ import java.nio.file.*;
 public class WatchFileRuntime {
 
     public static void run(ApplicationContext context) throws InterruptedException {
-
         try {
             final WatchService watchService = FileSystems.getDefault().newWatchService();
             Path path = Paths.get(System.getProperty("path"));
@@ -30,7 +29,7 @@ public class WatchFileRuntime {
                 key.reset();
             }
         } catch (IOException e) {
-            throw new LoadDataRuntimeException("Impossible to initialize Watch Service for file" + e);
+            throw new LoadDataRuntimeException("Impossible to initialize Watch Service for file " + e);
         }
 
     }
